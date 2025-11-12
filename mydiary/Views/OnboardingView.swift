@@ -11,19 +11,22 @@ struct OnboardingView: View {
         VStack(spacing: 24) {
             Text("MyDiary AI")
                 .font(.largeTitle.bold())
-                .foregroundColor(.appText)
+                .foregroundColor(.appHighlight)
             Text("Record your thoughts, auto-transcribed. Organize by calendar. Clean and private.")
                 .multilineTextAlignment(.center)
                 .foregroundColor(.appText.opacity(0.7))
             Image(systemName: "mic.circle.fill")
-                .resizable().scaledToFit().frame(width: 120)
-                .foregroundColor(AppTheme.accent)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120)
+                .foregroundStyle(AppTheme.accent)
+
             Button(action: requestPermissions) {
                 Text(micAllowed && speechAllowed ? "Continue" : "Allow Mic + Speech")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 16).fill(AppTheme.secondary))
-                    .foregroundColor(.white)
+                    .background(RoundedRectangle(cornerRadius: 16).fill(AppTheme.accent))
+                    .foregroundColor(AppTheme.background)
             }
             .padding(.horizontal)
         }

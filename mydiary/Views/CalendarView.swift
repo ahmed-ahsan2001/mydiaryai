@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct CalendarView: View {
+    @Environment(\.dismiss) private var dismiss
     let store: DiaryStore
     @State private var datesWithEntries: Set<String> = []
     @State private var month: Date = Date()
@@ -13,11 +14,11 @@ struct CalendarView: View {
                     month = Calendar.current.date(byAdding: .month, value: -1, to: month)!
                 }) {
                     Image(systemName: "chevron.left")
-                        .foregroundColor(AppTheme.lightPink)
+                        .foregroundColor(.appHighlight)
                         .padding(8)
                         .background(
                             Circle()
-                                .fill(Color.white.opacity(0.9))
+                                .fill(AppTheme.secondary.opacity(0.3))
                                 .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
                         )
                 }
@@ -26,7 +27,7 @@ struct CalendarView: View {
 
                 Text(month, formatter: DateFormatter.monthAndYear)
                     .font(.title3.bold())
-                    .foregroundColor(.appText)
+                    .foregroundColor(.appHighlight)
 
                 Spacer()
 
@@ -34,11 +35,11 @@ struct CalendarView: View {
                     month = Calendar.current.date(byAdding: .month, value: 1, to: month)!
                 }) {
                     Image(systemName: "chevron.right")
-                        .foregroundColor(AppTheme.lightPink)
+                        .foregroundColor(.appHighlight)
                         .padding(8)
                         .background(
                             Circle()
-                                .fill(Color.white.opacity(0.9))
+                                .fill(AppTheme.secondary.opacity(0.3))
                                 .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: 2)
                         )
                 }
@@ -68,17 +69,17 @@ struct CalendarView: View {
                                 VStack(spacing: 6) {
                                     Text("\(Calendar.current.component(.day, from: date))")
                                         .font(.subheadline)
-                                        .foregroundColor(.appText)
+                                        .foregroundColor(.appHighlight)
 
                                     Circle()
-                                        .fill(AppTheme.lightPink)
+                                        .fill(AppTheme.accent)
                                         .frame(width: 6, height: 6)
                                         .opacity(datesWithEntries.contains(key(for: date)) ? 1 : 0)
                                 }
                                 .frame(maxWidth: .infinity, minHeight: 48)
                                 .background(
                                     RoundedRectangle(cornerRadius: 12)
-                                        .fill(Color.white)
+                                        .fill(AppTheme.background)
                                         .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
                                 )
                             }
@@ -93,8 +94,21 @@ struct CalendarView: View {
 
             Spacer()
         }
-        .background(Color(red: 0.99, green: 0.98, blue: 0.95).ignoresSafeArea())
+        .background(AppTheme.background.ignoresSafeArea())
         .navigationTitle("Calendar")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { dismiss() }) {
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.left")
+                        Text("Back")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.appText)
+                }
+            }
+        }
         .task {
             let entries = (try? await store.loadAll()) ?? []
             datesWithEntries = Set(entries.map { key(for: $0.date) })

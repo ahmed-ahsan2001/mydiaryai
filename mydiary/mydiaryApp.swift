@@ -15,6 +15,7 @@ struct mydiaryApp: App {
             ContentView()
                 .tint(AppTheme.accent)
                 .background(AppTheme.background)
+                .preferredColorScheme(.light)
         }
     }
 }
