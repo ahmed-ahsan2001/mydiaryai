@@ -20,7 +20,7 @@ struct EntryView: View {
   @State private var isTranscribing = false
   @State private var isReviewSheetPresented = false
   @State private var reviewText: String = ""
-  @State private var reviewMood: DiaryEntry.Mood = .neutral
+  @State private var reviewMood: DiaryEntry.Mood = .happy
   @State private var reviewTags: [String] = []
   @State private var pendingAudioURL: URL?
   
@@ -84,7 +84,7 @@ struct EntryView: View {
       .padding(.horizontal)
       .padding(.bottom, 40)
     }
-    .background(AppTheme.background.ignoresSafeArea())
+    .background(Color.appBackground.ignoresSafeArea())
     .navigationBarTitleDisplayMode(.inline)
     .navigationBarBackButtonHidden(true)
     .toolbar {
@@ -104,10 +104,10 @@ struct EntryView: View {
           Button(action: { showRecordingSheet = true }) {
             Image(systemName: "mic.fill")
               .font(.title)
-              .foregroundColor(AppTheme.background)
+              .foregroundColor(Color.appBackground)
               .padding()
-              .background(Circle().fill(AppTheme.accent))
-              .shadow(color: AppTheme.accent.opacity(0.25), radius: 6, x: 0, y: 4)
+              .background(Circle().fill(Color.appAccent))
+              .shadow(color: Color.appAccent.opacity(0.25), radius: 6, x: 0, y: 4)
           }
           Spacer()
         }
@@ -244,7 +244,7 @@ struct EntryView: View {
       let transcript = try await transcribeAudio(at: url)
       await MainActor.run {
         reviewText = transcript
-        reviewMood = .neutral
+        reviewMood = .happy
         reviewTags = []
         pendingAudioURL = url
         isTranscribing = false
@@ -268,7 +268,7 @@ struct EntryView: View {
     }
     pendingAudioURL = nil
     reviewTags = []
-    reviewMood = .neutral
+    reviewMood = .happy
     reviewText = ""
     isReviewSheetPresented = false
   }
@@ -285,7 +285,7 @@ struct EntryView: View {
       await MainActor.run {
         pendingAudioURL = nil
         reviewTags = []
-        reviewMood = .neutral
+        reviewMood = .happy
         reviewText = ""
         isReviewSheetPresented = false
         alertInfo = AlertInfo(title: "Saved", message: "Entry saved to your day.")
@@ -357,7 +357,7 @@ private extension EntryView {
         .padding(.vertical, 6)
         .padding(.horizontal, 12)
         .background(
-          Capsule().fill(AppTheme.secondary.opacity(0.4))
+          Capsule().fill(Color.appSecondary.opacity(0.4))
         )
     }
     .foregroundColor(.appText)
@@ -420,7 +420,7 @@ private struct EntryInlineRow: View {
     .padding(18)
     .background(
       RoundedRectangle(cornerRadius: 16)
-        .fill(AppTheme.secondary.opacity(0.35))
+        .fill(Color.appSecondary.opacity(0.35))
         .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
     )
   }
@@ -497,9 +497,9 @@ private struct EntryInlineRow: View {
         } label: {
           Image(systemName: player.isPlaying ? "pause.fill" : "play.fill")
             .font(.headline)
-            .foregroundColor(AppTheme.background)
+            .foregroundColor(Color.appBackground)
             .padding(12)
-            .background(Circle().fill(AppTheme.accent))
+            .background(Circle().fill(Color.appAccent))
         }
         
         VStack(alignment: .leading, spacing: 4) {
@@ -519,7 +519,7 @@ private struct EntryInlineRow: View {
     .padding(12)
     .background(
       RoundedRectangle(cornerRadius: 14)
-        .fill(AppTheme.accent.opacity(0.08))
+        .fill(Color.appAccent.opacity(0.08))
     )
   }
   
@@ -616,7 +616,7 @@ private struct EditEntrySheet: View {
               .onSubmit(addTag)
             Button("Add") { addTag() }
               .buttonStyle(.borderedProminent)
-              .tint(AppTheme.accent)
+              .tint(Color.appAccent)
           }
           if tags.isEmpty {
             Text("No tags yet. Add #hashtags to group related memories.")
@@ -676,7 +676,7 @@ private struct EditEntrySheet: View {
               .padding()
               .background(
                 RoundedRectangle(cornerRadius: 12)
-                  .fill(AppTheme.accent)
+                  .fill(Color.appAccent)
               )
           }
         }
@@ -748,7 +748,7 @@ private struct ShareOptionsSheet: View {
             HStack(spacing: 16) {
               Image(systemName: option.systemImage)
                 .font(.title3)
-                .foregroundColor(AppTheme.accent)
+                .foregroundColor(Color.appAccent)
                 .frame(width: 32, height: 32)
               Text(option.title)
                 .foregroundColor(.appText)
@@ -760,7 +760,7 @@ private struct ShareOptionsSheet: View {
             .padding()
             .background(
               RoundedRectangle(cornerRadius: 12)
-                .fill(AppTheme.secondary.opacity(0.35))
+                .fill(Color.appSecondary.opacity(0.35))
             )
           }
         }
@@ -769,7 +769,7 @@ private struct ShareOptionsSheet: View {
       
       Spacer()
     }
-    .background(AppTheme.background)
+    .background(Color.appBackground)
   }
 }
 
@@ -796,8 +796,8 @@ private struct MoodFilterBar: View {
             HStack(spacing: Self.chipSpacing) {
         FilterChip(
           title: "All",
-          emoji: "✨",
-          tint: AppTheme.secondary,
+          emoji: Image(""),
+          tint: Color.appSecondary,
           isSelected: selection == nil
         ) {
           withAnimation(.easeInOut) { selection = nil }
@@ -823,7 +823,7 @@ private struct MoodFilterBar: View {
 
 private struct FilterChip: View {
   let title: String
-  let emoji: String
+  let emoji: Image
   let tint: Color
   let isSelected: Bool
   let action: () -> Void
@@ -831,7 +831,10 @@ private struct FilterChip: View {
   var body: some View {
     Button(action: action) {
       HStack(spacing: 6) {
-        Text(emoji)
+        emoji
+          .resizable()
+          .scaledToFit()
+          .frame(width: 16, height: 16)
         Text(title)
           .font(.subheadline.weight(.medium))
       }
@@ -852,7 +855,10 @@ private struct MoodBadge: View {
   
   var body: some View {
     HStack(spacing: 6) {
-      Text(mood.emoji)
+      mood.emoji
+        .resizable()
+        .scaledToFit()
+        .frame(width: 32, height: 32)
       Text(mood.displayName)
         .font(.caption.weight(.semibold))
         .foregroundColor(mood.tintColor)
@@ -872,12 +878,12 @@ private struct TagChip: View {
   var body: some View {
     Text("#\(tag)")
       .font(.caption.weight(.medium))
-      .foregroundColor(AppTheme.accent)
+      .foregroundColor(Color.appAccent)
       .padding(.vertical, 6)
       .padding(.horizontal, 12)
       .background(
         Capsule()
-          .fill(AppTheme.accent.opacity(0.12))
+                .fill(Color.appAccent.opacity(0.12))
       )
   }
 }
@@ -890,7 +896,7 @@ private struct EditableTagChip: View {
     HStack(spacing: 6) {
       Text("#\(tag)")
         .font(.caption.weight(.medium))
-        .foregroundColor(AppTheme.accent)
+        .foregroundColor(Color.appAccent)
       Button(action: onRemove) {
         Image(systemName: "xmark.circle.fill")
           .font(.caption)
@@ -902,7 +908,7 @@ private struct EditableTagChip: View {
     .padding(.horizontal, 10)
     .background(
       Capsule()
-        .fill(AppTheme.accent.opacity(0.12))
+                .fill(Color.appAccent.opacity(0.12))
     )
   }
 }
@@ -913,8 +919,10 @@ private struct MoodSelectionCard: View {
   
   var body: some View {
     VStack(spacing: 8) {
-      Text(mood.emoji)
-        .font(.largeTitle)
+      mood.emoji
+        .resizable()
+        .scaledToFit()
+        .frame(width: 48, height: 48)
       Text(mood.displayName)
         .font(.subheadline.weight(.medium))
         .foregroundColor(.appText)
@@ -923,7 +931,7 @@ private struct MoodSelectionCard: View {
     .padding()
     .background(
       RoundedRectangle(cornerRadius: 16)
-        .fill(isSelected ? mood.tintColor.opacity(0.18) : AppTheme.secondary.opacity(0.3))
+        .fill(isSelected ? mood.tintColor.opacity(0.18) : Color.appSecondary.opacity(0.3))
     )
     .overlay(
       RoundedRectangle(cornerRadius: 16)
@@ -954,7 +962,7 @@ private struct EmptyEntriesState: View {
     .padding(.vertical, 40)
     .background(
       RoundedRectangle(cornerRadius: 20)
-        .fill(AppTheme.secondary.opacity(0.35))
+        .fill(Color.appSecondary.opacity(0.35))
         .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
     )
     .padding(.horizontal, 12)

@@ -29,7 +29,7 @@ struct RecordingReviewSheet: View {
       }
       .padding()
     }
-    .background(AppTheme.background.ignoresSafeArea())
+    .background(Color.appBackground.ignoresSafeArea())
     .navigationTitle("Review Recording")
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
@@ -66,7 +66,7 @@ struct RecordingReviewSheet: View {
         .padding(12)
         .background(
           RoundedRectangle(cornerRadius: 14)
-            .stroke(AppTheme.accent.opacity(0.15), lineWidth: 1)
+            .stroke(Color.appAccent.opacity(0.15), lineWidth: 1)
             .background(
               RoundedRectangle(cornerRadius: 14)
                 .fill(Color.white)
@@ -89,8 +89,10 @@ struct RecordingReviewSheet: View {
             mood = option
           } label: {
             VStack(spacing: 8) {
-              Text(option.emoji)
-                .font(.largeTitle)
+              option.emoji
+                .resizable()
+                    .scaledToFit()
+                    .frame(width: 36, height: 36)
               Text(option.displayName)
                 .font(.subheadline.weight(.medium))
                 .foregroundColor(.appText)
@@ -99,7 +101,7 @@ struct RecordingReviewSheet: View {
             .padding()
             .background(
               RoundedRectangle(cornerRadius: 16)
-                .fill(option == mood ? option.tintColor.opacity(0.2) : AppTheme.secondary.opacity(0.35))
+                .fill(option == mood ? option.tintColor.opacity(0.2) : Color.appSecondary.opacity(0.35))
             )
             .overlay(
               RoundedRectangle(cornerRadius: 16)
@@ -126,7 +128,7 @@ struct RecordingReviewSheet: View {
         Button(action: addTag) {
           Image(systemName: "plus.circle.fill")
             .font(.title2)
-            .foregroundColor(AppTheme.accent)
+            .foregroundColor(Color.appAccent)
         }
         .buttonStyle(.plain)
       }
@@ -141,7 +143,7 @@ struct RecordingReviewSheet: View {
             HStack(spacing: 6) {
               Text("#\(tag)")
                 .font(.caption.weight(.medium))
-                .foregroundColor(AppTheme.accent)
+                .foregroundColor(Color.appAccent)
               Button {
                 removeTag(tag)
               } label: {
@@ -155,7 +157,7 @@ struct RecordingReviewSheet: View {
             .padding(.horizontal, 10)
             .background(
               Capsule()
-                .fill(AppTheme.accent.opacity(0.15))
+                .fill(Color.appAccent.opacity(0.15))
             )
           }
         }
@@ -168,12 +170,12 @@ struct RecordingReviewSheet: View {
       Button(action: onSave) {
         Text("Save Entry")
           .font(.headline)
-          .foregroundColor(AppTheme.background)
+          .foregroundColor(Color.appBackground)
           .frame(maxWidth: .infinity)
           .padding()
           .background(
             RoundedRectangle(cornerRadius: 16)
-              .fill(AppTheme.accent)
+              .fill(Color.appAccent)
           )
       }
       .buttonStyle(.plain)
@@ -210,4 +212,6 @@ struct RecordingReviewSheet: View {
     tags.removeAll { $0 == tag }
   }
 }
+
+
 

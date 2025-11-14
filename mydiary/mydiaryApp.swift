@@ -13,8 +13,8 @@ struct mydiaryApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .tint(AppTheme.accent)
-                .background(AppTheme.background)
+                        .tint(Color.appAccent)
+                        .background(Color.appBackground)
                 .preferredColorScheme(.light)
         }
     }

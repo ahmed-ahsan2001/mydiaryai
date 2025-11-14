@@ -14,13 +14,23 @@ struct PaywallView: View {
                 .foregroundColor(.appText.opacity(0.7))
             ForEach(offerings, id: \.self) { offer in
                 Button(action: { selected = offer; Task { try? await subscriptionService.subscribe(productId: offer) } }) {
-                    HStack { Text(offer); Spacer(); Image(systemName: "checkmark.circle") }
-                        .padding().background(RoundedRectangle(cornerRadius: 14).fill(.white))
-                        .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 3)
+                    HStack { 
+                        Text(offer)
+                            .foregroundColor(.appText)
+                        Spacer()
+                        Image(systemName: "checkmark.circle")
+                            .foregroundColor(.appAccent)
+                    }
+                    .padding()
+                    .background(RoundedRectangle(cornerRadius: 14).fill(Color.white))
+                    .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 3)
                 }
             }
-            Button("Restore Purchases") { Task { await subscriptionService.restorePurchases() } }
-                .padding(.top, 8)
+            Button("Restore Purchases") { 
+                Task { await subscriptionService.restorePurchases() }
+            }
+            .foregroundColor(.appAccent)
+            .padding(.top, 8)
         }
         .padding()
         .background(Color.appBackground.ignoresSafeArea())

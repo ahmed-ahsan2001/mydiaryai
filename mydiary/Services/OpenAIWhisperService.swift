@@ -36,6 +36,8 @@ struct OpenAIWhisperService {
         body.appendString("--\(boundary)\r\n")
         body.appendString("Content-Disposition: form-data; name=\"response_format\"\r\n\r\n")
         body.appendString("json\r\n")
+        // language: omit this parameter to enable automatic language detection
+        // Whisper will automatically detect the language if language parameter is not provided
         // file
         let fileData = try Data(contentsOf: fileURL)
         body.appendString("--\(boundary)\r\n")

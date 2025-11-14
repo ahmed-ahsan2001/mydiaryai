@@ -19,14 +19,14 @@ struct OnboardingView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 120)
-                .foregroundStyle(AppTheme.accent)
+                .foregroundStyle(Color.appAccent)
 
             Button(action: requestPermissions) {
                 Text(micAllowed && speechAllowed ? "Continue" : "Allow Mic + Speech")
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 16).fill(AppTheme.accent))
-                    .foregroundColor(AppTheme.background)
+                    .background(RoundedRectangle(cornerRadius: 16).fill(Color.appAccent))
+                    .foregroundColor(Color.appBackground)
             }
             .padding(.horizontal)
         }

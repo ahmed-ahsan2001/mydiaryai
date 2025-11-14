@@ -6,25 +6,25 @@ struct LaunchScreenView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.background
+            Color.appBackground
                 .ignoresSafeArea()
 
             VStack(spacing: 24) {
                 ZStack {
                     Circle()
-                        .fill(AppTheme.secondary.opacity(0.4))
+                        .fill(Color.appSecondary.opacity(0.4))
                         .frame(width: 180, height: 180)
                         .scaleEffect(animatePulse ? 1.2 : 0.9)
                         .opacity(animatePulse ? 0 : 1)
 
                     Circle()
-                        .fill(AppTheme.secondary.opacity(0.6))
+                        .fill(Color.appSecondary.opacity(0.6))
                         .frame(width: 140, height: 140)
                         .scaleEffect(animatePulse ? 1.05 : 0.95)
 
                     Image(systemName: "waveform.circle.fill")
                         .font(.system(size: 96))
-                        .foregroundColor(AppTheme.accent)
+                        .foregroundColor(Color.appAccent)
                         .scaleEffect(animateIcon ? 1 : 0.8)
                         .shadow(color: Color.black.opacity(0.1), radius: 12, x: 0, y: 8)
                 }

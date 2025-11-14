@@ -68,7 +68,7 @@ final class EntryViewModel: ObservableObject {
     }
 
     func addAudioEntry(from tempURL: URL) async {
-        var newEntry = DiaryEntry(date: entry.date, text: "", mood: .neutral)
+        var newEntry = DiaryEntry(date: entry.date, text: "", mood: .happy)
         let fileName = "\(newEntry.id.uuidString).m4a"
         newEntry.audioFileName = fileName
         let destination = store.audioURL(forEntryId: newEntry.id)

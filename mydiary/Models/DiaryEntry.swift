@@ -2,27 +2,27 @@ import Foundation
 
 struct DiaryEntry: Identifiable, Codable, Hashable {
     enum Mood: String, Codable, CaseIterable, Identifiable {
-        case excited, stressed, sad, neutral, peaceful
+        case cool, love, sad, angry, happy
 
         var id: String { rawValue }
 
         var displayName: String {
             switch self {
-            case .excited: return "Excited"
-            case .stressed: return "Stressed"
+            case .cool: return "Cool"
+            case .love: return "Love"
             case .sad: return "Sad"
-            case .neutral: return "Neutral"
-            case .peaceful: return "Peaceful"
+            case .angry: return "Angry"
+            case .happy: return "Happy"
             }
         }
 
         var sortOrder: Int {
             switch self {
-            case .excited: return 0
-            case .stressed: return 1
+            case .cool: return 0
+            case .love: return 1
             case .sad: return 2
-            case .neutral: return 3
-            case .peaceful: return 4
+            case .angry: return 3
+            case .happy: return 4
             }
         }
     }
@@ -42,7 +42,7 @@ struct DiaryEntry: Identifiable, Codable, Hashable {
         date: Date = Date(),
         text: String = "",
         audioFileName: String? = nil,
-        mood: Mood = .neutral,
+        mood: Mood = .happy,
         tags: [String] = [],
         audioDurationSeconds: TimeInterval? = nil
     ) {
@@ -71,7 +71,7 @@ struct DiaryEntry: Identifiable, Codable, Hashable {
         date = try container.decode(Date.self, forKey: .date)
         text = try container.decodeIfPresent(String.self, forKey: .text) ?? ""
         audioFileName = try container.decodeIfPresent(String.self, forKey: .audioFileName)
-        mood = try container.decodeIfPresent(Mood.self, forKey: .mood) ?? .neutral
+        mood = try container.decodeIfPresent(Mood.self, forKey: .mood) ?? .happy
         tags = try container.decodeIfPresent([String].self, forKey: .tags) ?? []
         audioDurationSeconds = try container.decodeIfPresent(TimeInterval.self, forKey: .audioDurationSeconds)
     }

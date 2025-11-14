@@ -9,8 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     private let store = DiaryStore()
+    @StateObject private var subscriptionService = SubscriptionService()
+    @StateObject private var themeManager: ThemeManager
     @State private var showOnboarding = UserDefaults.standard.bool(forKey: "has_onboarded") == false
     @State private var showLaunchScreen = true
+
+    init() {
+        let subService = SubscriptionService()
+        let themeMgr = ThemeManager(subscriptionService: subService)
+        _subscriptionService = StateObject(wrappedValue: subService)
+        _themeManager = StateObject(wrappedValue: themeMgr)
+    }
 
     var body: some View {
         ZStack {
@@ -22,10 +31,17 @@ struct ContentView: View {
                     showOnboarding = false
                 }
             } else {
-                HomeView(store: store)
+                HomeView(store: store, themeManager: themeManager, subscriptionService: subscriptionService)
+                    .environmentObject(themeManager)
             }
         }
-        .onAppear(perform: startLaunchTimer)
+        .onAppear {
+            ThemeManager.setGlobal(themeManager)
+            startLaunchTimer()
+        }
+        .onChange(of: themeManager.currentTheme) { _ in
+            ThemeManager.setGlobal(themeManager)
+        }
     }
 
     private func startLaunchTimer() {
